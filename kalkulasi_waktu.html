@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulasi Waktu UTC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            max-width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            margin: 15px auto;
+            padding: 10px 78px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .info-box {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .info-box h3 {
+            margin: 0;
+            color: #333;
+            text-align: center;
+        }
+        .info-box ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Kalkulasi Waktu UTC</h2>
+        
+        <label for="utcFrom">Zona Waktu Awal (UTC):</label>
+        <input type="number" id="utcFrom" value="0">
+
+        <label for="timeInput">Waktu (HH:MM):</label>
+        <input type="time" id="timeInput" value="00:00">
+        
+        <label for="utcTo">Zona Waktu Tujuan (UTC):</label>
+        <input type="number" id="utcTo" value="1">
+        
+        <button onclick="calculateTime()">Hitung</button>
+
+        <p id="result"></p>
+    </div>
+
+    <div class="info-box">
+        <h3>Perbedaan AM dan PM</h3>
+        <ul>
+            <li><b>AM (Ante Meridiem)</b>: Waktu dari <b>00:00 (tengah malam) hingga 11:59 pagi</b>.</li>
+            <li><b>PM (Post Meridiem)</b>: Waktu dari <b>12:00 siang hingga 11:59 malam</b>.</li>
+        </ul>
+    </div>
+
+    <script>
+        function calculateTime() {
+            let utcFrom = parseInt(document.getElementById("utcFrom").value);
+            let utcTo = parseInt(document.getElementById("utcTo").value);
+            let timeInput = document.getElementById("timeInput").value;
+            
+            if (!timeInput) {
+                document.getElementById("result").innerHTML = "Masukkan waktu yang valid!";
+                return;
+            }
+
+            let [hours, minutes] = timeInput.split(":").map(Number);
+
+            let now = new Date();
+            now.setUTCHours(hours - utcFrom, minutes, 0, 0);
+
+            let toTime = new Date(now.getTime() + (utcTo * 3600000));
+
+            let resultText = `Waktu di UTC${utcFrom >= 0 ? '+' + utcFrom : utcFrom} (${timeInput})<br>`;
+            resultText += `Waktu di UTC${utcTo >= 0 ? '+' + utcTo : utcTo} = ${toTime.getHours().toString().padStart(2, '0')}:${toTime.getMinutes().toString().padStart(2, '0')}`;
+
+            document.getElementById("result").innerHTML = resultText;
+        }
+    </script>
+
+</body>
+</html>

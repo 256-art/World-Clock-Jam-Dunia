@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jam Dunia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .clock-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .clock {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            text-align: center;
+        }
+        .city {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .time {
+            font-size: 20px;
+            color: #007bff;
+        }
+        .date {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jam Dunia</h1>
+
+    <a href="kalkulasi_waktu.html" class="btn">Kalkulasi</a>
+
+    <div class="clock-container" id="clock-container"></div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+            function formatTime(offset) {
+                return new Date(utcTime + (offset * 3600000)).toLocaleTimeString();
+            }
+
+            function formatDate(offset) {
+                return new Date(utcTime + (offset * 3600000)).toLocaleDateString('id-ID', options);
+            }
+
+            for (let i = -12; i <= 14; i++) {
+                const timeElement = document.getElementById(`utc${i}`);
+                const dateElement = document.getElementById(`utc${i}-date`);
+
+                if (timeElement && dateElement) {
+                    timeElement.innerText = formatTime(i);
+                    dateElement.innerText = formatDate(i);
+                }
+            }
+        }
+
+        function generateClocks() {
+            const container = document.getElementById("clock-container");
+            
+            for (let i = -12; i <= 14; i++) {
+                const clockDiv = document.createElement("div");
+                clockDiv.classList.add("clock");
+
+                const cityDiv = document.createElement("div");
+                cityDiv.classList.add("city");
+
+                if (i === 7) {
+                    cityDiv.innerText = `UTC+7 (WIB)`;
+                } else if (i === 8) {
+                    cityDiv.innerText = `UTC+8 (WITA)`;
+                } else if (i === 9) {
+                    cityDiv.innerText = `UTC+9 (WIT)`;
+                } else {
+                    cityDiv.innerText = `UTC${i >= 0 ? `+${i}` : i}`;
+                }
+
+                const timeDiv = document.createElement("div");
+                timeDiv.classList.add("time");
+                timeDiv.id = `utc${i}`;
+
+                const dateDiv = document.createElement("div");
+                dateDiv.classList.add("date");
+                dateDiv.id = `utc${i}-date`;
+
+                clockDiv.appendChild(cityDiv);
+                clockDiv.appendChild(timeDiv);
+                clockDiv.appendChild(dateDiv);
+                container.appendChild(clockDiv);
+            }
+        }
+
+        generateClocks();
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
