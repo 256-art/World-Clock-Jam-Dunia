@@ -100,30 +100,33 @@
         </ul>
     </div>
 
-    <script>
-        function calculateTime() {
-            let utcFrom = parseInt(document.getElementById("utcFrom").value);
-            let utcTo = parseInt(document.getElementById("utcTo").value);
-            let timeInput = document.getElementById("timeInput").value;
-            
-            if (!timeInput) {
-                document.getElementById("result").innerHTML = "Masukkan waktu yang valid!";
-                return;
-            }
-
-            let [hours, minutes] = timeInput.split(":").map(Number);
-
-            let now = new Date();
-            now.setUTCHours(hours - utcFrom, minutes, 0, 0);
-
-            let toTime = new Date(now.getTime() + (utcTo * 3600000));
-
-            let resultText = `Waktu di UTC${utcFrom >= 0 ? '+' + utcFrom : utcFrom} (${timeInput})<br>`;
-            resultText += `Waktu di UTC${utcTo >= 0 ? '+' + utcTo : utcTo} = ${toTime.getHours().toString().padStart(2, '0')}:${toTime.getMinutes().toString().padStart(2, '0')}`;
-
-            document.getElementById("result").innerHTML = resultText;
+<script>
+    function calculateTime() {
+        let utcFrom = parseInt(document.getElementById("utcFrom").value);
+        let utcTo = parseInt(document.getElementById("utcTo").value);
+        let timeInput = document.getElementById("timeInput").value;
+        
+        if (!timeInput) {
+            document.getElementById("result").innerHTML = "Masukkan waktu yang valid!";
+            return;
         }
-    </script>
+
+        let [hours, minutes] = timeInput.split(":").map(Number);
+
+        // Buat objek tanggal dengan waktu yang diberikan berdasarkan UTC awal
+        let now = new Date();
+        now.setUTCHours(hours, minutes, 0, 0);
+
+        // Hitung selisih waktu berdasarkan perbedaan zona waktu
+        let offset = utcTo - utcFrom;
+        let toTime = new Date(now.getTime() + offset * 3600000);
+
+        let resultText = `Waktu di UTC${utcFrom >= 0 ? '+' + utcFrom : utcFrom} (${timeInput})<br>`;
+        resultText += `Waktu di UTC${utcTo >= 0 ? '+' + utcTo : utcTo} = ${toTime.getUTCHours().toString().padStart(2, '0')}:${toTime.getUTCMinutes().toString().padStart(2, '0')}`;
+
+        document.getElementById("result").innerHTML = resultText;
+    }
+</script>
 
 </body>
 </html>
